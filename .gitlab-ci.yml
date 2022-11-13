@@ -1,0 +1,84 @@
+variables:
+  GROUP: automation
+  DOCKER_REGISTRY: gitlab.com/registry
+  IMAGE_VER: 23ee45a1
+  DOCKER_DRIVER: overlay2
+  
+stages:
+  - build
+  - test
+  - plan
+  - deploy
+  - script
+
+.base_image:
+  image: $DOCKER_REGISTRY/$GROUP/runner-custom-image:$IMAGE_VER
+  before_script:
+   - export NPMR_OPT="NPM=gitlab_cache"
+  
+.cache_push:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - gitlab_cache
+    policy: pull-push
+    
+.cache_pull:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - gitlab_cache
+    policy: pull
+    
+.compile_base:
+  extends:
+    - .base_image
+    - .cache_push
+  stage: compile  
+  except:
+    - triggers
+    - schedules  
+  tags:
+    - shared-runner-id
+    
+.run_base:
+  extends:
+    - .base_image
+    - .cache_pull
+  except:
+    - triggers
+    - schedules  
+  tags:
+    - shared-runner-id
+    
+build_app:
+  extends: .compile_base
+  script:
+    - source scripts/build_all.sh
+  
+    
+plan_deployment:
+  extends: .run_base
+  stage: plan  
+  script:
+    - source scripts/plan.sh
+  artifacts:
+    paths:
+      - dag.json
+      - pipeline.yml
+    expire_in: 1 hour
+    
+
+deploy:
+  extends: .run_base
+  stage: deploy  
+  trigger:
+    include:
+      - artifact: pipeline.yml
+        job: plan_deployment
+    strategy: depend
+        
+  
+  
+
+  
