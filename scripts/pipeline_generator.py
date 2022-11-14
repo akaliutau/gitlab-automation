@@ -22,6 +22,7 @@ base_image = {
 deployment_base = {
     '.deployment_base': {
         'extends': ['.base_image'],
+        'rules': ['allow_failure: true'],
         'tags': ['saas-linux-medium-amd64']
     }
 }
@@ -47,7 +48,7 @@ closure_job = {
     'closure_job': {
         'extends': ['.deployment_base'],
         'stage': 'closure',
-        'script': ['cat scripts/pipeline.yml', 'exit 0']
+        'script': ['exit 0']
     }
 }
 
