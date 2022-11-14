@@ -1,14 +1,17 @@
 #!/bin/bash
 
-$IMAGE_VER = $(git master)
+set -e
 
-TAG=$DOCKER_REGISTRY/$GROUP/runner-custom-image:$IMAGE_VER
+IMAGE_VER=$(git rev-parse --short HEAD)
 
-docker login -u $GITLAB_USER -p $GITLAB_PWD $DOCKER_REGISTRY
+TAG=$GITLAB_DOCKER_REGISTRY/$GROUP/gitlab-automation:$IMAGE_VER
 
-docker build -t $TAG -f Dockerfile --label githash=$IMAGE_VER
+echo building image $TAG
 
-docker push $TAG
+sudo docker login -u $GITLAB_USERNAME -p $GITLAB_PASSWORD $GITLAB_DOCKER_REGISTRY
+sudo docker build -t $TAG -f Dockerfile --label githash=$IMAGE_VER .
+
+sudo docker push $TAG
 
 
 

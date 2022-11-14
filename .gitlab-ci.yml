@@ -1,7 +1,4 @@
 variables:
-  GROUP: automation
-  DOCKER_REGISTRY: gitlab.com/registry
-  IMAGE_VER: 23ee45a1
   DOCKER_DRIVER: overlay2
   
 stages:
@@ -12,22 +9,20 @@ stages:
   - script
 
 .base_image:
-  image: $DOCKER_REGISTRY/$GROUP/runner-custom-image:$IMAGE_VER
-  before_script:
-   - export NPMR_OPT="NPM=gitlab_cache"
+  image: $RUNNER_CUSTOM_IMAGE
   
 .cache_push:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - gitlab_cache
+      - node_modules/
     policy: pull-push
     
 .cache_pull:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - gitlab_cache
+      - node_modules/
     policy: pull
     
 .compile_base:
@@ -39,7 +34,7 @@ stages:
     - triggers
     - schedules  
   tags:
-    - shared-runner-id
+    - saas-linux-medium-amd64
     
 .run_base:
   extends:
@@ -49,7 +44,7 @@ stages:
     - triggers
     - schedules  
   tags:
-    - shared-runner-id
+    - saas-linux-medium-amd64
     
 build_app:
   extends: .compile_base

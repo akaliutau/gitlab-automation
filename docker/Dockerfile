@@ -1,8 +1,10 @@
-FROM alpine:3.16.3
+FROM node:18
 
-COPY include.sh include.sh
+COPY ./include.sh include.sh
 RUN chmod +x include.sh
 
-RUN include.sh
+RUN ls
+
+RUN ./include.sh
 
 

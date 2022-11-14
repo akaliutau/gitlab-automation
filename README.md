@@ -65,7 +65,7 @@ This script will do the following:
 
 # Building image for GitLab Runner
 
-First for convinience create env variables `GITLAB_USERNAME` and `GITLAB_PASSWORD` to hold GitLab's docker registry creds (note, this is not the secure place to hold secrets):
+First for convinience create env variables `GITLAB_USERNAME`, `GITLAB_PASSWORD` to hold GitLab's docker registry creds (note, this is not the secure place to hold secrets and consider using providers); set docker registry url via `export GITLAB_DOCKER_REGISTRY=registry.gitlab.com`:
 
 ```
 sudo nano ~/.profile
@@ -75,10 +75,22 @@ The following commands build and push image for GitLab runners
 
 ```
 cd ./docker
-docker build -t registry.gitlab.com/automation299/dmanager .
-sudo docker login -u $GITLAB_USERNAME -p $GITLAB_PASSWORD registry.gitlab.com
+export GROUP=<name of the group>
+./build_image.sh
 ```
 
+Note the image URL - it can be used now for GitLab Runners.
+
+Create a GitLab trigger token (Settings -> CI/CD -> Pipeline triggers) and put it into `GITLAB_TOKEN` env variable.
+Create a GitLab access token (PAT, User Settings -> Access Tokens) and put it into `PAT_TOKEN` env variable.
+Create a `RUNNER_CUSTOM_IMAGE` env variable in CI/CD area:
+
+```
+curl --request POST --header "PRIVATE-TOKEN: $PAT_TOKEN" \
+     "https://gitlab.com/api/v4/projects/41024544/variables" \
+     --form "key=RUNNER_CUSTOM_IMAGE" \
+     --form "value=registry.gitlab.com/automation299/gitlab-automation:a9316a0"
+```
 
 
 # Manipulating GCP resources via API
