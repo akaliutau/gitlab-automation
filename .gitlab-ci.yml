@@ -67,6 +67,9 @@ plan_deployment:
 
 deploy:
   stage: deploy  
+  only:
+    variables:
+      - $DEPLOYMENT
   trigger:
     include:
       - artifact: pipeline.yml
