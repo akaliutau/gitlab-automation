@@ -22,9 +22,6 @@ base_image = {
 deployment_base = {
     '.deployment_base': {
         'extends': ['.base_image'],
-        'only': {
-            'variables': ['$DEPLOYMENT']
-        },
         'tags': ['saas-linux-medium-amd64']
     }
 }
