@@ -40,9 +40,9 @@ stages:
   extends:
     - .base_image
     - .cache_pull
-  except:
-    - triggers
-    - schedules  
+  only:
+    variables:
+      - $DEPLOYMENT
   tags:
     - saas-linux-medium-amd64
     
