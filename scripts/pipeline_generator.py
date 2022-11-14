@@ -25,7 +25,7 @@ deployment_base = {
         'only': {
             'variables': ['$DEPLOYMENT']
         },
-        'tags': 'saas-linux-medium-amd64'
+        'tags': ['saas-linux-medium-amd64']
     }
 }
 
