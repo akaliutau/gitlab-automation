@@ -64,14 +64,14 @@ plan_deployment:
     expire_in: 1 hour
     
 
-deploy:
-  extends: .run_base
-  stage: deploy  
-  trigger:
-    include:
-      - artifact: pipeline.yml
-        job: plan_deployment
-    strategy: depend
+#deploy:
+#  extends: .run_base
+#  stage: deploy  
+#  trigger:
+#    include:
+#      - artifact: pipeline.yml
+#        job: plan_deployment
+#    strategy: depend
         
   
   
