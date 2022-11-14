@@ -7,7 +7,6 @@ stages:
   - plan
   - deploy
   - script
-  - deploy-env-1
 
 .base_image:
   image: $RUNNER_CUSTOM_IMAGE
@@ -47,23 +46,7 @@ stages:
   tags:
     - saas-linux-medium-amd64
     
-.deploy_base:
-  extends:
-    - .base_image
-    - .cache_pull
-  only:
-    variables:
-      - $DEPLOYMENT     
-  tags:
-    - saas-linux-medium-amd64
-
-.deployment_vars:
-  stage: deploy-env-1
-  variables:
-    LOCATION: location_one	
-    ENVIRONMENT: environment_one	
-
-    
+   
 build_app:
   extends: .compile_base
   stage: build  
@@ -82,22 +65,14 @@ plan_deployment:
       - pipeline.yml
     expire_in: 1 hour
 
-deployment_env_1:
-  extends: 
-    - .deploy_base
-    - .deployment_vars
-  script:
-    - source scripts/deploy.sh
-    
-
-#deploy:
-#  extends: .run_base
-#  stage: deploy  
-#  trigger:
-#    include:
-#      - artifact: pipeline.yml
-#        job: plan_deployment
-#    strategy: depend
+deploy:
+  extends: .run_base
+  stage: deploy  
+  trigger:
+    include:
+      - artifact: pipeline.yml
+        job: plan_deployment
+    strategy: depend
         
   
   
