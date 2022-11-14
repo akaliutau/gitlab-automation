@@ -48,6 +48,7 @@ stages:
     
 build_app:
   extends: .compile_base
+  stage: build  
   script:
     - source scripts/build_all.sh
   
