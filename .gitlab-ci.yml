@@ -62,7 +62,7 @@ plan_deployment:
   artifacts:
     paths:
       - dag.json
-      - pipeline.yml
+      - scripts/pipeline.yml
     expire_in: 1 hour
 
 deploy:
@@ -72,7 +72,7 @@ deploy:
       - $DEPLOYMENT
   trigger:
     include:
-      - artifact: pipeline.yml
+      - artifact: scripts/pipeline.yml
         job: plan_deployment
     strategy: depend
         
