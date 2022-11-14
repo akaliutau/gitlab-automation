@@ -10,7 +10,7 @@ variables = {
 }
 
 stages = {
-    'stages': []
+    'stages': ['closure']
 }
 
 base_image = {
@@ -49,7 +49,7 @@ deployment = {
 closure_job = {
     'closure_job': {
         'extends': ['.deployment_base'],
-        'stage': 'deploy',
+        'stage': 'closure',
         'script': ['cat scripts/pipeline.yml', 'exit 0']
     }
 }
