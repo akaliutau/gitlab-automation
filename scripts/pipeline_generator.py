@@ -46,6 +46,14 @@ deployment = {
     }
 }
 
+closure_job = {
+    'closure_job': {
+        'extends': ['.deployment_base'],
+        'stage': 'deploy',
+        'script': ['cat scripts/pipeline.yml', 'exit 0']
+    }
+}
+
 site_map = [
     ('site_1', 'us-east-1', 'site_1_env'),
     ('site_2', 'us-east-2', 'site_2_env'),
@@ -69,6 +77,7 @@ if __name__ == '__main__':
     pipeline.add('stages_section', copy.deepcopy(stages))
     pipeline.add('base_image_section', copy.deepcopy(base_image))
     pipeline.add('deployment_base_section', copy.deepcopy(deployment_base))
+    pipeline.add('closure_job_section', copy.deepcopy(closure_job))
     print(pipeline.sections_map)
 
     for site_name, location, env in site_map:

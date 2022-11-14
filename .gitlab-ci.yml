@@ -7,8 +7,7 @@ stages:
   - plan
   - deploy
   - script
-  - deploy-site-1
- 
+
 .base_image:
   image: $RUNNER_CUSTOM_IMAGE
   
@@ -76,22 +75,6 @@ deploy:
       - artifact: scripts/pipeline.yml
         job: plan_deployment
     strategy: depend
-.deployment_base:
-  extends:
-    - .base_image
-  tags:
-    - saas-linux-medium-amd64
-.deployment_vars_site_1:
-  stage: deploy-site-1
-  variables:
-    LOCATION: us-east-1
-    ENVIRONMENT: site_1_env
-deployment_site_1:
-  extends:
-    - .deployment_base
-    - .deployment_vars_site_1
-  script:
-    - source scripts/deploy.sh
         
   
   
