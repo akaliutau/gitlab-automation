@@ -1,0 +1,171 @@
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - closure
+  - deploy_before
+  - deploy_app-name-1
+  - deploy_app-name-2
+  - deploy_after
+
+.base_image:
+  image: $RUNNER_CUSTOM_IMAGE
+
+.deployment_base:
+  extends:
+    - .base_image
+  rules:
+    - allow_failure: true
+  tags:
+    - saas-linux-medium-amd64
+
+closure_job:
+  extends:
+    - .deployment_base
+  stage: closure
+  script:
+    - exit 0
+
+deployment:site-1:before:
+  extends:
+    - .deployment_base
+  stage: deploy_before
+  script:
+    - source scripts/before-deploy.sh
+  variables:
+    LOCATION: us-east-1
+    ENVIRONMENT: site_1_env
+    APP: app-name-1,app-name-2
+
+deployment:site-1:app-name-1:
+  extends:
+    - .deployment_base
+  stage: deploy_app-name-1
+  script:
+    - source scripts/deploy.sh
+  variables:
+    LOCATION: us-east-1
+    ENVIRONMENT: site_1_env
+    APP: app-name-1
+  needs:
+    - deployment:site-1:before
+
+deployment:site-1:app-name-2:
+  extends:
+    - .deployment_base
+  stage: deploy_app-name-2
+  script:
+    - source scripts/deploy.sh
+  variables:
+    LOCATION: us-east-1
+    ENVIRONMENT: site_1_env
+    APP: app-name-2
+
+deployment:site-1:after:
+  extends:
+    - .deployment_base
+  stage: deploy_after
+  script:
+    - source scripts/after-deploy.sh
+  variables:
+    LOCATION: us-east-1
+    ENVIRONMENT: site_1_env
+    APP: app-name-1,app-name-2
+  needs:
+    - deployment:site-1:app-name-2
+
+deployment:site-2:before:
+  extends:
+    - .deployment_base
+  stage: deploy_before
+  script:
+    - source scripts/before-deploy.sh
+  variables:
+    LOCATION: us-east-2
+    ENVIRONMENT: site_2_env
+    APP: app-name-1,app-name-2
+
+deployment:site-2:app-name-1:
+  extends:
+    - .deployment_base
+  stage: deploy_app-name-1
+  script:
+    - source scripts/deploy.sh
+  variables:
+    LOCATION: us-east-2
+    ENVIRONMENT: site_2_env
+    APP: app-name-1
+  needs:
+    - deployment:site-2:before
+
+deployment:site-2:app-name-2:
+  extends:
+    - .deployment_base
+  stage: deploy_app-name-2
+  script:
+    - source scripts/deploy.sh
+  variables:
+    LOCATION: us-east-2
+    ENVIRONMENT: site_2_env
+    APP: app-name-2
+
+deployment:site-2:after:
+  extends:
+    - .deployment_base
+  stage: deploy_after
+  script:
+    - source scripts/after-deploy.sh
+  variables:
+    LOCATION: us-east-2
+    ENVIRONMENT: site_2_env
+    APP: app-name-1,app-name-2
+  needs:
+    - deployment:site-2:app-name-2
+
+deployment:site-3:before:
+  extends:
+    - .deployment_base
+  stage: deploy_before
+  script:
+    - source scripts/before-deploy.sh
+  variables:
+    LOCATION: europe-west-2
+    ENVIRONMENT: site_3_env
+    APP: app-name-1,app-name-2
+
+deployment:site-3:app-name-1:
+  extends:
+    - .deployment_base
+  stage: deploy_app-name-1
+  script:
+    - source scripts/deploy.sh
+  variables:
+    LOCATION: europe-west-2
+    ENVIRONMENT: site_3_env
+    APP: app-name-1
+  needs:
+    - deployment:site-3:before
+
+deployment:site-3:app-name-2:
+  extends:
+    - .deployment_base
+  stage: deploy_app-name-2
+  script:
+    - source scripts/deploy.sh
+  variables:
+    LOCATION: europe-west-2
+    ENVIRONMENT: site_3_env
+    APP: app-name-2
+
+deployment:site-3:after:
+  extends:
+    - .deployment_base
+  stage: deploy_after
+  script:
+    - source scripts/after-deploy.sh
+  variables:
+    LOCATION: europe-west-2
+    ENVIRONMENT: site_3_env
+    APP: app-name-1,app-name-2
+  needs:
+    - deployment:site-3:app-name-2

@@ -1,3 +1,5 @@
+import sys
+from io import StringIO
 from typing import List
 
 
@@ -31,7 +33,7 @@ class YAMLSection:
 
 
 class YAML:
-    """Represents logical section in YAML file
+    """Represents YAML file in the form of linked objects
     """
 
     def __init__(self):
@@ -40,8 +42,9 @@ class YAML:
 
     def to_string(self) -> str:
         ret = list()
-        for stage in self.sections_li:
-            ret.extend(YAMLSection(self.sections_map.get(stage)).to_lines())
+        for section in self.sections_li:
+            stage = self.sections_map.get(section)
+            ret.extend(YAMLSection(stage).to_lines())
             ret.append('')
         return '\n'.join(ret)
 
@@ -51,3 +54,23 @@ class YAML:
 
     def get(self, section_name: str) -> dict:
         return self.sections_map.get(section_name)
+
+
+class RedirectedStdout:
+    """Redirects output of print to file
+       Autocloseable class
+    """
+    def __init__(self):
+        self._stdout = None
+        self._string_io = None
+
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._string_io = StringIO()
+        return self
+
+    def __exit__(self, type_name, value, traceback):
+        sys.stdout = self._stdout
+
+    def __str__(self):
+        return self._string_io.getvalue()
