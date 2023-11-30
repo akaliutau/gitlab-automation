@@ -1,5 +1,7 @@
 # GCP Tooling API
 
+This repository contains PoCs for various experimental DevOps approaches when harnessing GitLab to perform deployment of dockerized applications to the Cloud   
+
 # Pre-requisites
 
 - gcloud (with non-null value of env var GOOGLE_APPLICATION_CREDENTIALS)
@@ -92,8 +94,6 @@ curl --request POST --header "PRIVATE-TOKEN: $PAT_TOKEN" \
      --form "value=registry.gitlab.com/automation299/gitlab-automation:a9316a0"
 ```
 
-
-# Manipulating GCP resources via API
 
 
 
