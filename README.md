@@ -1,4 +1,4 @@
-# GCP Tooling API
+# GCP automation via GitLab
 
 This repository contains PoCs for various experimental DevOps approaches when harnessing GitLab to perform deployment of dockerized applications to the Cloud   
 
