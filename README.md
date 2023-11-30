@@ -2,6 +2,8 @@
 
 This repository contains PoCs for various experimental DevOps approaches when harnessing GitLab to perform deployment of dockerized applications to the Cloud   
 
+In particular, the idea of _dynamically generated CI/CD pipeline_ is investigated (ie. `gitlab-ci.yml` file or its parts are generated in runtime)
+
 # Pre-requisites
 
 - gcloud (with non-null value of env var GOOGLE_APPLICATION_CREDENTIALS)
